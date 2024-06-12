@@ -1,6 +1,6 @@
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import auth from "../firebaseConfig";
 import { signOut } from "firebase/auth";
 
@@ -16,7 +16,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gray-100 p-4 flex flex-col items-center">
       {/* Banner Section */}
-      <div className="w-full bg-blue-600 text-white text-center py-8 mb-8 rounded">
+      <div className="w-full bg-gray-800 text-white text-center py-8 mb-8 rounded">
         <h1 className="text-4xl font-bold">Welcome to EventMaster</h1>
         <p className="mt-4 text-xl">
           Your one-stop solution for booking events, both free and paid,
@@ -24,6 +24,19 @@ const Home = () => {
         </p>
       </div>
 
+      {/* Sign Up/Login Button */}
+      <div className="mt-8">
+        {user ? (
+          <Link
+            to="/dashboard"
+            className="bg-gray-800 text-white py-2 px-4 rounded shadow-lg transform transition hover:bg-blue-700"
+          >
+            Dashboard
+          </Link>
+        ) : (
+          <></>
+        )}
+      </div>
       {/* Steps Section */}
       <div className="w-full max-w-4xl">
         <h2 className="text-2xl font-bold mb-4">Get Started in 3 Easy Steps</h2>
