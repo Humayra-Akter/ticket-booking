@@ -1,8 +1,17 @@
 import React from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
+import auth from "../firebaseConfig";
+import { signOut } from "firebase/auth";
 
 const Home = () => {
+  const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
+
+  const logout = () => {
+    signOut(auth);
+    localStorage.removeItem("accessToken");
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 flex flex-col items-center">
@@ -36,12 +45,21 @@ const Home = () => {
 
       {/* Sign Up/Login Button */}
       <div className="mt-8">
-        <button
-          onClick={() => navigate("/signup")}
-          className="bg-blue-600 text-white py-2 px-4 rounded shadow-lg transform transition hover:bg-blue-700"
-        >
-          Sign Up / Login
-        </button>
+        {user ? (
+          <button
+            onClick={logout}
+            className="bg-red-600 text-white py-2 px-4 rounded shadow-lg transform transition hover:bg-blue-700"
+          >
+            Sign Out
+          </button>
+        ) : (
+          <button
+            onClick={() => navigate("/signup")}
+            className="bg-blue-600 text-white py-2 px-4 rounded shadow-lg transform transition hover:bg-blue-700"
+          >
+            Sign Up / Login
+          </button>
+        )}
       </div>
     </div>
   );
