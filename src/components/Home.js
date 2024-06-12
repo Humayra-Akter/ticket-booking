@@ -1,83 +1,48 @@
-import React, { useState } from "react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-900">
-          Welcome to the Ultimate Event Experience
-        </h1>
-        <p className="mt-4 text-lg text-gray-700">
-          Join us for an unforgettable experience with live music, exciting
-          performances, and much more. Get your tickets now and be part of the
-          excitement!
+    <div className="min-h-screen bg-gray-100 p-4 flex flex-col items-center">
+      {/* Banner Section */}
+      <div className="w-full bg-blue-600 text-white text-center py-8 mb-8 rounded">
+        <h1 className="text-4xl font-bold">Welcome to EventMaster</h1>
+        <p className="mt-4 text-xl">
+          Your one-stop solution for booking events, both free and paid,
+          seamlessly.
         </p>
       </div>
 
-      <div className="w-3/4 bg-white shadow-lg rounded-lg p-6 mb-8">
-        <h2 className="text-2xl font-semibold mb-4">How to Book Your Ticket</h2>
-        <ol className="list-decimal list-inside space-y-2">
-          <li>Select the event you want to attend</li>
-          <li>Choose your preferred seats</li>
-          <li>Enter your details and proceed to payment</li>
-          <li>Receive your ticket via email</li>
-        </ol>
-      </div>
-
-      <button
-        className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-        onClick={() => setShowModal(true)}
-      >
-        Login / Signup
-      </button>
-
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-1/3">
-            <h2 className="text-2xl font-bold mb-4">Login / Signup</h2>
-            <form className="space-y-4">
-              <div>
-                <label className="block text-gray-700">Name</label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700">Email</label>
-                <input
-                  type="email"
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700">Password</label>
-                <input
-                  type="password"
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div className="flex justify-end space-x-4">
-                <button
-                  type="button"
-                  className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
-                  onClick={() => setShowModal(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                >
-                  Submit
-                </button>
-              </div>
-            </form>
+      {/* Steps Section */}
+      <div className="w-full max-w-4xl">
+        <h2 className="text-2xl font-bold mb-4">Get Started in 3 Easy Steps</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-white p-6 rounded shadow-lg transform transition hover:scale-105">
+            <h3 className="text-xl font-bold mb-2">1. Sign Up</h3>
+            <p>Create your account to get started with booking events.</p>
+          </div>
+          <div className="bg-white p-6 rounded shadow-lg transform transition hover:scale-105">
+            <h3 className="text-xl font-bold mb-2">2. Browse Events</h3>
+            <p>Explore a wide range of events available for booking.</p>
+          </div>
+          <div className="bg-white p-6 rounded shadow-lg transform transition hover:scale-105">
+            <h3 className="text-xl font-bold mb-2">3. Book & Enjoy</h3>
+            <p>Select your event, book your tickets, and enjoy!</p>
           </div>
         </div>
-      )}
+      </div>
+
+      {/* Sign Up/Login Button */}
+      <div className="mt-8">
+        <button
+          onClick={() => navigate("/signup")}
+          className="bg-blue-600 text-white py-2 px-4 rounded shadow-lg transform transition hover:bg-blue-700"
+        >
+          Sign Up / Login
+        </button>
+      </div>
     </div>
   );
 };
