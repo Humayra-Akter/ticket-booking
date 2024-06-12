@@ -5,24 +5,48 @@ const Modal = ({ isOpen, onClose, event }) => {
   const [isPaymentLoading, setPaymentLoading] = useState(false);
 
   const handleToken = async (token) => {
-    // Backend API integration to process payment with Stripe
-    const response = await fetch("http://localhost:5000/payment", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        token,
-        event,
-      }),
-    });
+    setPaymentLoading(true);
+    try {
+      const response = await fetch("http://localhost:5000/payment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token,
+          event,
+        }),
+      });
 
-    // Handle response from backend
-    const data = await response.json();
-    console.log(data); // Log response from backend (success or error)
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error("Error processing payment:", error);
+    } finally {
+      setPaymentLoading(false);
+      onClose(); // Close modal after payment attempt, regardless of success
+    }
+  };
 
-    // You can handle further actions based on the payment response
-    // For example, show a success message or redirect to a confirmation page
+  const handleBooking = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          event,
+        }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error("Error booking event:", error);
+    } finally {
+      onClose(); 
+    }
   };
 
   return (
@@ -39,25 +63,39 @@ const Modal = ({ isOpen, onClose, event }) => {
                 <p className="text-gray-600">Price: ${event.price}</p>
               )}
             </div>
-            <div className="mb-4">
-              <StripeCheckout
-                token={handleToken}
-                stripeKey="YOUR_STRIPE_PUBLIC_KEY"
-                amount={event.price * 100} // Amount in cents
-                currency="USD"
-                name="Book Event"
-                billingAddress={false}
-              >
+            {!event.free ? (
+              <div className="mb-4">
+                <StripeCheckout
+                  token={handleToken}
+                  stripeKey="YOUR_STRIPE_PUBLIC_KEY"
+                  amount={event.price * 100}
+                  currency="USD"
+                  name="Book Event"
+                  billingAddress={false}
+                >
+                  <button
+                    className={`bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md text-center w-full ${
+                      isPaymentLoading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                    disabled={isPaymentLoading}
+                  >
+                    {isPaymentLoading ? "Processing..." : "Pay Now"}
+                  </button>
+                </StripeCheckout>
+              </div>
+            ) : (
+              <div className="mb-4">
                 <button
-                  className={`bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md text-center w-full ${
+                  onClick={handleBooking}
+                  className={`bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md text-center w-full ${
                     isPaymentLoading ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                   disabled={isPaymentLoading}
                 >
-                  {isPaymentLoading ? "Processing..." : "Pay Now"}
+                  {isPaymentLoading ? "Booking..." : "Book Now"}
                 </button>
-              </StripeCheckout>
-            </div>
+              </div>
+            )}
             <button
               className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-md text-center w-full"
               onClick={onClose}

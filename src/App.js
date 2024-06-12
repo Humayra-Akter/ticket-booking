@@ -7,7 +7,6 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Dashboard from "./components/Dashboard/Dashboard";
 import EventDetails from "./components/Dashboard/EventDetails";
-import Events from "./components/Dashboard/Events";
 
 const App = () => {
   return (
@@ -17,7 +16,6 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/events" element={<Events />} />
         <Route path="/event/:id" element={<EventDetails />} />
       </Routes>
       <ToastContainer />

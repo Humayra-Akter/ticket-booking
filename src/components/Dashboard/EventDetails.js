@@ -34,6 +34,35 @@ const EventDetails = () => {
             )}
             <p className="text-gray-600">Capacity: {event.capacity}</p>
           </div>
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold mb-2">Highlights:</h2>
+            <ul className="list-disc list-inside text-gray-600">
+              {event.highlights?.map((highlight, index) => (
+                <li key={index}>{highlight}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold mb-2">Featured Performers:</h2>
+            <ul className="list-disc list-inside text-gray-600">
+              {event.featuredPerformers?.map((performer, index) => (
+                <li key={index}>
+                  <strong>{performer.name}</strong> ({performer.genre}) -{" "}
+                  {performer.description}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold mb-2">Schedule:</h2>
+            <ul className="list-disc list-inside text-gray-600">
+              {event?.schedule?.map((item, index) => (
+                <li key={index}>
+                  <strong>{item.time}</strong> - {item.event}
+                </li>
+              ))}
+            </ul>
+          </div>
           <div className="flex justify-between">
             <button
               onClick={() => setModalOpen(true)}

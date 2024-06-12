@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import Home from "./Home";
-import Events from "./Events";
 import Bookings from "./Bookings";
 
 const Dashboard = () => {
@@ -26,14 +25,7 @@ const Dashboard = () => {
             >
               <Link to="/dashboard">Home</Link>
             </li>
-            <li
-              className={`p-4 cursor-pointer ${
-                selectedMenuItem === "events" && "bg-gray-700"
-              }`}
-              onClick={() => handleMenuItemClick("events")}
-            >
-              <Link to="/dashboard/events">Events</Link>
-            </li>
+
             <li
               className={`p-4 cursor-pointer ${
                 selectedMenuItem === "bookings" && "bg-gray-700"
@@ -49,7 +41,6 @@ const Dashboard = () => {
       {/* Main Content Area */}
       <div className="flex-1 p-8">
         {selectedMenuItem === "home" && <Home />}
-        {selectedMenuItem === "events" && <Events />}
         {selectedMenuItem === "bookings" && <Bookings />}
       </div>
     </div>
