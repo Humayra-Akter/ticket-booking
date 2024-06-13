@@ -1,16 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Link, useNavigate } from "react-router-dom";
 import auth from "../firebaseConfig";
 import { signOut } from "firebase/auth";
+import AdminLoginModal from "./Signup/AdminLoginModal";
 
 const Home = () => {
-  const [user, loading, error] = useAuthState(auth);
+  const [user] = useAuthState(auth);
   const navigate = useNavigate();
+  const [showAdminLoginModal, setShowAdminLoginModal] = useState(false);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const adminEmail = localStorage.getItem("adminEmail");
+    if (adminEmail) {
+      setIsAdminLoggedIn(true);
+    }
+  }, []);
+
+  const adminLogout = () => {
+    signOut(auth);
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("adminEmail");
+    setIsAdminLoggedIn(false);
+  };
 
   const logout = () => {
     signOut(auth);
     localStorage.removeItem("accessToken");
+  };
+
+  const handleAdminLogin = () => {
+    setShowAdminLoginModal(true);
   };
 
   return (
@@ -24,21 +45,8 @@ const Home = () => {
         </p>
       </div>
 
-      {/* Sign Up/Login Button */}
-      <div className="mt-8">
-        {user ? (
-          <Link
-            to="/dashboard"
-            className="bg-gray-800 text-white py-2 px-4 rounded shadow-lg transform transition hover:bg-blue-700"
-          >
-            Dashboard
-          </Link>
-        ) : (
-          <></>
-        )}
-      </div>
       {/* Steps Section */}
-      <div className="w-full max-w-4xl">
+      <div className="w-full max-w-4xl mt-8">
         <h2 className="text-2xl font-bold mb-4">Get Started in 3 Easy Steps</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white p-6 rounded shadow-lg transform transition hover:scale-105">
@@ -58,22 +66,59 @@ const Home = () => {
 
       {/* Sign Up/Login Button */}
       <div className="mt-8">
-        {user ? (
-          <button
-            onClick={logout}
-            className="bg-red-600 text-white py-2 px-4 rounded shadow-lg transform transition hover:bg-blue-700"
-          >
-            Sign Out
-          </button>
-        ) : (
+        {!user && !isAdminLoggedIn ? (
           <button
             onClick={() => navigate("/signup")}
-            className="bg-blue-600 text-white py-2 px-4 rounded shadow-lg transform transition hover:bg-blue-700"
+            className="bg-blue-600 w-40 text-white py-2 px-4 rounded shadow-lg transform transition hover:bg-blue-700"
           >
             Sign Up / Login
           </button>
+        ) : null}
+      </div>
+
+      {/* Sign Out Button for User */}
+      <div className="mt-8">
+        {user && !isAdminLoggedIn && (
+          <button
+            onClick={logout}
+            className="bg-red-600 w-40 text-white py-2 px-4 rounded shadow-lg transform transition hover:bg-blue-700"
+          >
+            Sign Out
+          </button>
         )}
       </div>
+
+      {/* Admin Sign Out Button */}
+      <div className="mt-8">
+        {isAdminLoggedIn && (
+          <button
+            onClick={adminLogout}
+            className="bg-red-600 w-40 text-white py-2 px-4 rounded shadow-lg transform transition hover:bg-blue-700"
+          >
+            Admin Sign Out
+          </button>
+        )}
+      </div>
+
+      {/* Admin Login Button */}
+      <div>
+        {!user && !isAdminLoggedIn && (
+          <button
+            onClick={() => setShowAdminLoginModal(true)}
+            className="bg-gray-800 w-40 text-white py-2 px-4 rounded shadow-lg transform transition hover:bg-blue-700"
+          >
+            Admin Login
+          </button>
+        )}
+      </div>
+
+      {/* Admin Login Modal */}
+      {showAdminLoginModal && (
+        <AdminLoginModal
+          onClose={() => setShowAdminLoginModal(false)}
+          onAdminLogin={handleAdminLogin}
+        />
+      )}
     </div>
   );
 };
