@@ -1,33 +1,31 @@
 import React, { useEffect, useState } from "react";
 import Modal from "./Modal";
+import Loading from "../Shared/Loading";
 import auth from "../../firebaseConfig";
 import { useAuthState } from "react-firebase-hooks/auth";
-
+import { toast } from "react-toastify";
 
 const Bookings = () => {
-const [user, loading, error] = useAuthState(auth);
+  const [user, loading, error] = useAuthState(auth);
   const [bookings, setBookings] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:5000/bookings/${user?.email}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setBookings(data);
-        } else {
-          console.error("Failed to fetch bookings:", response.statusText);
-        }
-      } catch (error) {
-        console.error("Error fetching bookings:", error.message);
-      }
-    };
     if (user) {
-      fetchBookings();
+      fetch(`http://localhost:5000/bookings/${user?.email}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (Array.isArray(data) && data.length > 0) {
+            setBookings(data);
+            console.log(data);
+          } else {
+            toast.warning(`No notifications for ${user?.displayName}`);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching notifications:", error);
+        });
     }
   }, [user]);
 
@@ -36,8 +34,20 @@ const [user, loading, error] = useAuthState(auth);
     setModalOpen(true);
   };
 
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return <div className="container mx-auto p-4">Error: {error.message}</div>;
+  }
+
   if (!user) {
-    return <div className="container mx-auto p-4">Loading...</div>;
+    return (
+      <div className="container mx-auto p-4">
+        Please log in to see your bookings.
+      </div>
+    );
   }
 
   return (
@@ -51,7 +61,7 @@ const [user, loading, error] = useAuthState(auth);
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {bookings.map((booking) => (
               <div
-                key={booking.id}
+                key={booking._id}
                 className="bg-white rounded-md overflow-hidden shadow-md mb-4"
               >
                 <div className="p-4">

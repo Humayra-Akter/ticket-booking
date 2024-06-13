@@ -7,6 +7,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const Signup = () => {
   const {
@@ -29,7 +30,6 @@ const Signup = () => {
       );
 
       fetch("http://localhost:5000/user", {
-        // Use http:// instead of https:// for local development
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -158,6 +158,7 @@ const Signup = () => {
             </button>
           </div>
         </form>
+      <Link to="/login">Login account</Link>
       </div>
     </div>
   );

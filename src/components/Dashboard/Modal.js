@@ -1,8 +1,12 @@
 import React, { useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import StripeCheckout from "react-stripe-checkout";
+import auth from "../../firebaseConfig";
+import { toast } from "react-toastify";
 
 const Modal = ({ isOpen, onClose, event }) => {
   const [isPaymentLoading, setPaymentLoading] = useState(false);
+  const [user] = useAuthState(auth);
 
   const handleToken = async (token) => {
     setPaymentLoading(true);
@@ -24,29 +28,43 @@ const Modal = ({ isOpen, onClose, event }) => {
       console.error("Error processing payment:", error);
     } finally {
       setPaymentLoading(false);
-      onClose(); // Close modal after payment attempt, regardless of success
+      onClose();
     }
   };
 
   const handleBooking = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/bookings", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          event,
-        }),
-      });
+    if (!user) return;
+    setPaymentLoading(true);
 
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error("Error booking event:", error);
-    } finally {
-      onClose(); 
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("User not authenticated");
+      setPaymentLoading(false);
+      return;
     }
+
+    const data = {
+      event,
+      user: {
+        email: user.email,
+        displayName: user.displayName,
+      },
+    };
+
+    await fetch("http://localhost:5000/booking", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        toast.success("Product added successfully");
+        setPaymentLoading(false);
+        onClose();
+      });
   };
 
   return (

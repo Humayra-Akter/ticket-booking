@@ -20,8 +20,14 @@ const Home = () => {
             <p>{event.description}</p>
             <p className="text-gray-500">Date: {event.date}</p>
             <p className="text-gray-500">Location: {event.location}</p>
+            <p className="text-gray-600">
+              Free Event: {event.free ? "Yes" : "No"}
+            </p>
+            {!event.free && (
+              <p className="text-gray-800">Price: ${event.price}</p>
+            )}
             <Link
-              to={`/event/${event._id}`} 
+              to={`/event/${event._id}`}
               className="mt-2 inline-block bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
             >
               View Details

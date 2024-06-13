@@ -1,6 +1,5 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import auth from "../../firebaseConfig";
 import {
   signInWithEmailAndPassword,
@@ -8,6 +7,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { toast } from "react-toastify";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const {
@@ -29,13 +29,15 @@ const Login = () => {
         .then((res) => res.json())
         .then((userData) => {
           if (userData.length > 0) {
+            const token = user.accessToken;
+            localStorage.setItem("token", token);
             toast.success("Login successful", { appearance: "success" });
-            navigate("/dashboard"); // Redirect to dashboard
+            navigate("/dashboard");
           } else {
             toast.error("User not found, please sign up", {
               appearance: "error",
             });
-            navigate("/signup"); // Redirect to signup
+            navigate("/signup");
           }
         });
     } catch (error) {
@@ -52,13 +54,15 @@ const Login = () => {
         .then((res) => res.json())
         .then((userData) => {
           if (userData.length > 0) {
+            const token = user.accessToken;
+            localStorage.setItem("token", token);
             toast.success("Login successful", { appearance: "success" });
-            navigate("/dashboard"); // Redirect to dashboard
+            navigate("/dashboard");
           } else {
             toast.error("User not found, please sign up", {
               appearance: "error",
             });
-            navigate("/signup"); // Redirect to signup
+            navigate("/signup");
           }
         });
     } catch (error) {
@@ -120,6 +124,7 @@ const Login = () => {
               Login with Google
             </button>
           </div>
+          <Link to="/signup">Create account</Link>
         </form>
       </div>
     </div>
