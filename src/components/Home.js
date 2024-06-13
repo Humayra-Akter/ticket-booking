@@ -44,7 +44,30 @@ const Home = () => {
           seamlessly.
         </p>
       </div>
-
+      {user ? (
+        <>
+          <Link
+            to="/dashboard"
+            className="bg-gray-800 w-40 text-center text-white py-2 px-4 rounded shadow-lg transform transition hover:bg-blue-700"
+          >
+            Dashboard
+          </Link>
+        </>
+      ) : (
+        <></>
+      )}{" "}
+      {isAdminLoggedIn ? (
+        <>
+          <Link
+            to="/adminDashboard"
+            className="bg-gray-800 w-40 text-center text-white py-2 px-4 rounded shadow-lg transform transition hover:bg-blue-700"
+          >
+            Dashboard
+          </Link>
+        </>
+      ) : (
+        <></>
+      )}
       {/* Steps Section */}
       <div className="w-full max-w-4xl mt-8">
         <h2 className="text-2xl font-bold mb-4">Get Started in 3 Easy Steps</h2>
@@ -63,7 +86,6 @@ const Home = () => {
           </div>
         </div>
       </div>
-
       {/* Sign Up/Login Button */}
       <div className="mt-8">
         {!user && !isAdminLoggedIn ? (
@@ -75,7 +97,6 @@ const Home = () => {
           </button>
         ) : null}
       </div>
-
       {/* Sign Out Button for User */}
       <div className="mt-8">
         {user && !isAdminLoggedIn && (
@@ -87,7 +108,6 @@ const Home = () => {
           </button>
         )}
       </div>
-
       {/* Admin Sign Out Button */}
       <div className="mt-8">
         {isAdminLoggedIn && (
@@ -99,7 +119,6 @@ const Home = () => {
           </button>
         )}
       </div>
-
       {/* Admin Login Button */}
       <div>
         {!user && !isAdminLoggedIn && (
@@ -111,7 +130,6 @@ const Home = () => {
           </button>
         )}
       </div>
-
       {/* Admin Login Modal */}
       {showAdminLoginModal && (
         <AdminLoginModal

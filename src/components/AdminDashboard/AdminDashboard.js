@@ -18,7 +18,7 @@ const AdminDashboard = () => {
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
-      <div className="bg-gray-800 text-white w-64 flex flex-col">
+      <div className="bg-gray-800 max-h-screen text-white w-64 flex flex-col">
         <div className="p-4 bg-gray-900 text-xl font-bold">Admin</div>
 
         <div className="flex-1 overflow-y-auto">
@@ -29,7 +29,7 @@ const AdminDashboard = () => {
               }`}
               onClick={() => handleMenuItemClick("event")}
             >
-              <Link to="/dashboard">Events</Link>
+              <Link to="/adminDashboard">Events</Link>
             </li>
             <li
               className={`p-4 cursor-pointer ${
@@ -37,7 +37,7 @@ const AdminDashboard = () => {
               }`}
               onClick={() => handleMenuItemClick("admin")}
             >
-              <Link to="/dashboard/admin">Add Admin</Link>
+              <Link to="/adminDashboard/admin">Add Admin</Link>
             </li>{" "}
             <li
               className={`p-4 cursor-pointer ${
@@ -45,7 +45,7 @@ const AdminDashboard = () => {
               }`}
               onClick={() => handleMenuItemClick("bookings")}
             >
-              <Link to="/dashboard/bookings">Bookings</Link>
+              <Link to="/adminDashboard/bookings">Bookings</Link>
             </li>
           </ul>
         </div>

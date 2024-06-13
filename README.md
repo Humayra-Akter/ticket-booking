@@ -14,6 +14,13 @@ Frontend: React, React-Bootstrap, React-Firebase-Hooks, Stripe Checkout
 Backend: Node.js, Express, Stripe API, MongoDB
 Authentication: Firebase Authentication
 
+##Admin credentials
+email: programminghero@gmail.com
+pass: 123456789
+or--
+email: humayra25@gmail.com
+pass: 123456789
+
 ##Usage
 1.Creating an Account
 Navigate to the login or registration page.

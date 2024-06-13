@@ -51,7 +51,6 @@ const Signup = () => {
       const { user } = await signInWithPopup(auth, provider);
 
       fetch("http://localhost:5000/user", {
-        // Use http:// instead of https:// for local development
         method: "POST",
         headers: {
           "Content-Type": "application/json",
