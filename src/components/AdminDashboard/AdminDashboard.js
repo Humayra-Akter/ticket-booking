@@ -31,7 +31,14 @@ const AdminDashboard = () => {
             >
               <Link to="/dashboard">Events</Link>
             </li>
-
+            <li
+              className={`p-4 cursor-pointer ${
+                selectedMenuItem === "admin" && "bg-gray-700"
+              }`}
+              onClick={() => handleMenuItemClick("admin")}
+            >
+              <Link to="/dashboard/admin">Add Admin</Link>
+            </li>{" "}
             <li
               className={`p-4 cursor-pointer ${
                 selectedMenuItem === "bookings" && "bg-gray-700"
