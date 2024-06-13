@@ -17,7 +17,7 @@ const Home = () => {
     <div className="min-h-screen bg-gray-100 p-4 flex flex-col items-center">
       {/* Banner Section */}
       <div className="w-full bg-gray-800 text-white text-center py-8 mb-8 rounded">
-        <h1 className="text-4xl font-bold">Welcome to EventMaster</h1>
+        <h1 className="text-4xl font-bold">Welcome to Event-Master</h1>
         <p className="mt-4 text-xl">
           Your one-stop solution for booking events, both free and paid,
           seamlessly.

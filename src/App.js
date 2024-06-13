@@ -20,6 +20,7 @@ const App = () => {
         <Route path="/event/:id" element={<EventDetails />} />
         <Route path="/dashboard/bookings" element={<Bookings />} />
       </Routes>
+
       <ToastContainer />
     </div>
   );

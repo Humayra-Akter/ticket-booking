@@ -4,6 +4,7 @@ import Home from "./Home";
 import Bookings from "./Bookings";
 import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../firebaseConfig";
+import BackHome from "../Shared/BackHome";
 
 const Dashboard = () => {
   const [selectedMenuItem, setSelectedMenuItem] = useState("home");
@@ -18,7 +19,7 @@ const Dashboard = () => {
       {/* Sidebar */}
       <div className="bg-gray-800 text-white w-64 flex flex-col">
         <div className="p-4 bg-gray-900 text-xl font-bold">Dashboard</div>
-        <div className="p-4 bg-gray-900 text-xs font-bold">{user?.email}</div>
+
         <div className="flex-1 overflow-y-auto">
           <ul>
             <li
@@ -27,7 +28,7 @@ const Dashboard = () => {
               }`}
               onClick={() => handleMenuItemClick("home")}
             >
-              <Link to="/dashboard">Home</Link>
+              <Link to="/dashboard">Events</Link>
             </li>
 
             <li
@@ -40,6 +41,7 @@ const Dashboard = () => {
             </li>
           </ul>
         </div>
+        <BackHome />
       </div>
 
       {/* Main Content Area */}

@@ -13,14 +13,16 @@ const Bookings = () => {
 
   useEffect(() => {
     if (user) {
-      fetch(`http://localhost:5000/bookings/${user?.email}`)
+      fetch(`http://localhost:5000/bookings/${user.email}`)
         .then((res) => res.json())
         .then((data) => {
           if (Array.isArray(data) && data.length > 0) {
-            setBookings(data);
-            console.log(data);
+            const uniqueBookings = Array.from(
+              new Map(data.map((item) => [item.event._id, item])).values()
+            );
+            setBookings(uniqueBookings);
           } else {
-            toast.warning(`No notifications for ${user?.displayName}`);
+            toast.warning(`No notifications for ${user.displayName}`);
           }
         })
         .catch((error) => {
@@ -29,9 +31,21 @@ const Bookings = () => {
     }
   }, [user]);
 
-  const handleViewDetails = (event) => {
-    setSelectedEvent(event);
-    setModalOpen(true);
+  const handleDownloadTicket = (event) => {
+    const ticketData = `
+      Event: ${event.name}
+      Date: ${event.date}
+      Location: ${event.location}
+      Description: ${event.description}
+    `;
+    const blob = new Blob([ticketData], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${event.name}_ticket.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   if (loading) {
@@ -52,48 +66,51 @@ const Bookings = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="max-w-3xl w-full bg-white shadow-md rounded-lg overflow-hidden">
+      <div className="max-w-4xl w-full bg-white shadow-md rounded-lg overflow-hidden">
         <div className="p-6">
           <h1 className="text-3xl font-bold mb-4">Your Bookings</h1>
-          {bookings.length === 0 && (
+          {bookings.length === 0 ? (
             <p className="text-gray-600">You haven't booked any events yet.</p>
-          )}
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {bookings.map((booking) => (
-              <div
-                key={booking._id}
-                className="bg-white rounded-md overflow-hidden shadow-md mb-4"
-              >
-                <div className="p-4">
-                  <h2 className="text-lg font-semibold mb-2">
-                    {booking.event.name}
-                  </h2>
-                  <p className="text-gray-600 mb-2">
-                    {booking.event.description}
-                  </p>
-                  <p className="text-gray-600 mb-2">
-                    Date: {booking.event.date}
-                  </p>
-                  <p className="text-gray-600 mb-2">
-                    Location: {booking.event.location}
-                  </p>
-                  {booking.event.free ? (
-                    <p className="text-green-600 font-semibold">Free Event</p>
-                  ) : (
-                    <p className="text-red-600 font-semibold">
-                      Paid Event: ${booking.event.price}
+          ) : (
+            <div>
+              {bookings.map((booking) => (
+                <div
+                  key={booking._id}
+                  className="bg-white rounded-md overflow-hidden shadow-md mb-4"
+                >
+                  <div className="p-4">
+                    <h2 className="text-lg font-semibold mb-2">
+                      {booking.event.name}
+                    </h2>
+                    <p className="text-gray-600 mb-2">
+                      {booking.event.description}
                     </p>
-                  )}
-                  <button
-                    onClick={() => handleViewDetails(booking.event)}
-                    className="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
-                  >
-                    View Details
-                  </button>
+                    <p className="text-gray-600 mb-2">
+                      Date: {booking.event.date}
+                    </p>
+                    <p className="text-gray-600 mb-2">
+                      Location: {booking.event.location}
+                    </p>
+                    {booking.event.free ? (
+                      <p className="text-green-600 font-semibold">Free Event</p>
+                    ) : (
+                      <p className="text-red-600 font-semibold">
+                        Paid Event: ${booking.event.price}
+                      </p>
+                    )}
+                    <div className="justify-end flex">
+                      <button
+                        onClick={() => handleDownloadTicket(booking.event)}
+                        className="mt-4 bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md"
+                      >
+                        Download Ticket
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
       <Modal

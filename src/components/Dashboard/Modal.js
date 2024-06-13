@@ -10,6 +10,7 @@ const Modal = ({ isOpen, onClose, event }) => {
 
   const handleToken = async (token) => {
     setPaymentLoading(true);
+
     try {
       const response = await fetch("http://localhost:5000/payment", {
         method: "POST",
@@ -22,35 +23,37 @@ const Modal = ({ isOpen, onClose, event }) => {
         }),
       });
 
+      if (!response.ok) {
+        throw new Error("Payment failed");
+      }
+
       const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error("Error processing payment:", error);
-    } finally {
+      console.log("Payment successful:", data.message);
       setPaymentLoading(false);
       onClose();
+    } catch (error) {
+      console.error("Payment error:", error.message);
+      console.error("Payment failed. Please try again.");
+      setPaymentLoading(false);
     }
   };
 
   const handleBooking = async () => {
     if (!user) return;
     setPaymentLoading(true);
-
     const token = localStorage.getItem("token");
     if (!token) {
-      toast.error("User not authenticated");
+      console.error("User not authenticated");
       setPaymentLoading(false);
       return;
     }
-
     const data = {
       event,
       user: {
-        email: user.email,
-        displayName: user.displayName,
+        email: user?.email,
+        displayName: user?.displayName,
       },
     };
-
     await fetch("http://localhost:5000/booking", {
       method: "POST",
       headers: {
@@ -61,9 +64,14 @@ const Modal = ({ isOpen, onClose, event }) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        toast.success("Product added successfully");
+        toast.success("Booking added successfully");
         setPaymentLoading(false);
         onClose();
+      })
+      .catch((error) => {
+        console.error("Booking failed");
+        toast.success("Booking added successfully");
+        setPaymentLoading(false);
       });
   };
 
@@ -85,10 +93,11 @@ const Modal = ({ isOpen, onClose, event }) => {
               <div className="mb-4">
                 <StripeCheckout
                   token={handleToken}
-                  stripeKey="YOUR_STRIPE_PUBLIC_KEY"
+                  stripeKey="pk_test_51LpXSTB2p6fbEfxXk32nWyXtHR9ZukuT27MRZKbUURf4knvZlU3YJvOdwIF9vcaqBXC54LbfqXnbVEuzsrdafiiL00e7FloWfK"
                   amount={event.price * 100}
                   currency="USD"
                   name="Book Event"
+                  email={user?.email}
                   billingAddress={false}
                 >
                   <button
