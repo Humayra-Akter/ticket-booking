@@ -7,7 +7,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BackHome from "../Shared/BackHome";
 
 const Signup = () => {
@@ -16,6 +16,7 @@ const Signup = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     if (data.password !== data.confirmPassword) {
@@ -38,8 +39,12 @@ const Signup = () => {
         body: JSON.stringify(user),
       })
         .then((res) => res.json())
-        .then((data) => console.log(data));
-      toast.success("User signed up successfully", { appearance: "success" });
+        .then((data) => {
+          toast.success("User signed up successfully", {
+            appearance: "success",
+          });
+          navigate("/login");
+        });
     } catch (error) {
       toast.error(error.message, { appearance: "error" });
     }
@@ -170,10 +175,7 @@ const Signup = () => {
             </div>
           </form>
           <div className="flex items-center justify-center mt-3">
-            <Link
-              to="/login"
-              className="text-blue-600 font-bold  underline"
-            >
+            <Link to="/login" className="text-blue-600 font-bold  underline">
               Login account
             </Link>
           </div>

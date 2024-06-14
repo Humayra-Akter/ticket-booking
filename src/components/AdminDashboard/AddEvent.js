@@ -1,378 +1,241 @@
 import React, { useState } from "react";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { useForm, useFieldArray } from "react-hook-form";
 
 const AddEvent = () => {
-  const [eventData, setEventData] = useState({
-    name: "",
-    description: "",
-    date: "",
-    location: "",
-    free: false,
-    price: 0,
-    capacity: 0,
-    categories: [""],
-    organizer: {
-      name: "",
-      contact: "",
-    },
-    highlights: [""],
-    featuredSpeakers: [""],
-    schedule: [""],
+  const { register, handleSubmit, control, reset, watch } = useForm();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "organizers",
   });
+  const [isFree, setIsFree] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    if (type === "checkbox") {
-      setEventData({
-        ...eventData,
-        [name]: checked,
-      });
-    } else if (
-      name.startsWith("highlight") ||
-      name.startsWith("speaker") ||
-      name.startsWith("schedule") ||
-      name.startsWith("category")
-    ) {
-      const [field, index] = name.split("_");
-      const updatedArray = [...eventData[field]];
-      updatedArray[parseInt(index, 10)] = value;
-      setEventData({
-        ...eventData,
-        [field]: updatedArray,
-      });
-    } else if (name.startsWith("organizer")) {
-      const [field, subField] = name.split("_");
-      setEventData({
-        ...eventData,
-        [field]: {
-          ...eventData[field],
-          [subField]: value,
-        },
-      });
-    } else {
-      setEventData({
-        ...eventData,
-        [name]: value,
-      });
-    }
-  };
-
-  const handleAddField = (field) => {
-    setEventData({
-      ...eventData,
-      [field]: [...eventData[field], ""],
-    });
-  };
-
-  const handleRemoveField = (field, index) => {
-    const updatedArray = [...eventData[field]];
-    updatedArray.splice(index, 1);
-    setEventData({
-      ...eventData,
-      [field]: updatedArray,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    await fetch("http://localhost:5000/events", {
+  const onSubmit = async (data) => {
+    await fetch("http://localhost:5000/event", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(eventData),
+      body: JSON.stringify(data),
     })
       .then((res) => res.json())
       .then((data) => {
-        toast.success("Event added successfully");
-        setEventData({
-          name: "",
-          description: "",
-          date: "",
-          location: "",
-          free: false,
-          price: 0,
-          capacity: 0,
-          categories: [""],
-          organizer: {
-            name: "",
-            contact: "",
-          },
-          highlights: [""],
-          featuredSpeakers: [""],
-          schedule: [""],
-        });
-      })
-      .catch((error) => {
-        toast.error("Error adding event");
+        alert("Event added successfully");
+        reset();
+        setIsFree(false);
       });
   };
 
+  const handleFreeChange = (e) => {
+    setIsFree(e.target.checked);
+  };
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="max-w-5xl w-full bg-gray-300 shadow-md rounded-lg overflow-hidden">
-        <div className="p-6">
-          <h2 className="text-2xl font-bold mb-4">Add Event</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-10">
+    <div className="p-6 bg-gray-100">
+      <div className="max-w-4xl mx-auto p-4 bg-gray-300 shadow-md rounded-md mt-10">
+        <h2 className="text-2xl font-bold mb-4">Add New Event</h2>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="grid lg:grid-cols-2 gap-10">
+            <div>
               <div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                    value={eventData.name}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Description
-                  </label>
-                  <textarea
-                    name="description"
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                    value={eventData.description}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Date
-                  </label>
-                  <input
-                    type="date"
-                    name="date"
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                    value={eventData.date}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Location
-                  </label>
-                  <input
-                    type="text"
-                    name="location"
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                    value={eventData.location}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Free
-                  </label>
-                  <input
-                    type="checkbox"
-                    name="free"
-                    className="mt-1"
-                    checked={eventData.free}
-                    onChange={handleChange}
-                  />
-                </div>
-                {!eventData.free && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Price
-                    </label>
-                    <input
-                      type="number"
-                      name="price"
-                      className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                      value={eventData.price}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                )}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Capacity
-                  </label>
-                  <input
-                    type="number"
-                    name="capacity"
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                    value={eventData.capacity}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Event Name
+                </label>
+                <input
+                  {...register("name", { required: true })}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  type="text"
+                  placeholder="Event Name"
+                />
               </div>
 
               <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Description
+                </label>
+                <textarea
+                  {...register("description", { required: true })}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Event Description"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Date
+                </label>
+                <input
+                  {...register("date", { required: true })}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  type="date"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Location
+                </label>
+                <input
+                  {...register("location", { required: true })}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  type="text"
+                  placeholder="Event Location"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Free Event
+                </label>
+                <input
+                  {...register("free")}
+                  type="checkbox"
+                  onChange={handleFreeChange}
+                />
+              </div>
+
+              {!isFree && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Categories
-                  </label>
-                  {eventData.categories.map((category, index) => (
-                    <div key={index} className="flex items-center">
-                      <input
-                        type="text"
-                        name={`category_${index}`}
-                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                        value={category}
-                        onChange={handleChange}
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveField("categories", index)}
-                        className="ml-2 bg-red-500 text-white px-2 py-1 rounded"
-                      >
-                        -
-                      </button>
-                    </div>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={() => handleAddField("categories")}
-                    className="mt-2 bg-blue-500 text-white px-2 py-1 rounded"
-                  >
-                    Add Category
-                  </button>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Organizer
+                    Price
                   </label>
                   <input
-                    type="text"
-                    name="organizer_name"
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                    value={eventData.organizer.name}
-                    onChange={handleChange}
-                    required
-                  />
-                  <input
-                    type="text"
-                    name="organizer_contact"
-                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                    value={eventData.organizer.contact}
-                    onChange={handleChange}
-                    required
+                    {...register("price", { required: true })}
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    type="number"
+                    placeholder="Event Price"
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Highlights
-                  </label>
-                  {eventData.highlights.map((highlight, index) => (
-                    <div key={index} className="flex items-center">
-                      <input
-                        type="text"
-                        name={`highlight_${index}`}
-                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                        value={highlight}
-                        onChange={handleChange}
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveField("highlights", index)}
-                        className="ml-2 bg-red-500 text-white px-2 py-1 rounded"
-                      >
-                        -
-                      </button>
-                    </div>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={() => handleAddField("highlights")}
-                    className="mt-2 bg-blue-500 text-white px-2 py-1 rounded"
-                  >
-                    Add Highlight
-                  </button>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Featured Speakers
-                  </label>
-                  {eventData.featuredSpeakers.map((speaker, index) => (
-                    <div key={index} className="flex items-center">
-                      <input
-                        type="text"
-                        name={`speaker_${index}`}
-                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                        value={speaker}
-                        onChange={handleChange}
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleRemoveField("featuredSpeakers", index)
-                        }
-                        className="ml-2 bg-red-500 text-white px-2 py-1 rounded"
-                      >
-                        -
-                      </button>
-                    </div>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={() => handleAddField("featuredSpeakers")}
-                    className="mt-2 bg-blue-500 text-white px-2 py-1 rounded"
-                  >
-                    Add Speaker
-                  </button>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Schedule
-                  </label>
-                  {eventData.schedule.map((item, index) => (
-                    <div key={index} className="flex items-center">
-                      <input
-                        type="text"
-                        name={`schedule_${index}`}
-                        className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                        value={item}
-                        onChange={handleChange}
-                        required
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveField("schedule", index)}
-                        className="ml-2 bg-red-500 text-white px-2 py-1 rounded"
-                      >
-                        -
-                      </button>
-                    </div>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={() => handleAddField("schedule")}
-                    className="mt-2 bg-blue-500 text-white px-2 py-1 rounded"
-                  >
-                    Add Schedule Item
-                  </button>
-                </div>
+              )}
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Capacity
+                </label>
+                <input
+                  {...register("capacity", { required: true })}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  type="number"
+                  placeholder="Event Capacity"
+                />
               </div>
             </div>
-            <button
-              type="submit"
-              className="bg-blue-600 text-white py-2 px-4 rounded shadow-lg transform transition hover:bg-blue-700"
-            >
-              Add Event
-            </button>
-          </form>
-        </div>
+
+            <div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Categories
+                </label>
+                <input
+                  {...register("categories", { required: true })}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  type="text"
+                  placeholder="Categories (comma separated)"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Highlights
+                </label>
+                <textarea
+                  {...register("highlights", { required: true })}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Highlights (comma separated)"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Featured Artists/Speakers
+                </label>
+                <textarea
+                  {...register("featured", { required: true })}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Featured Artists/Speakers (name and description, separated by semicolon)"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Schedule
+                </label>
+                <textarea
+                  {...register("schedule", { required: true })}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  placeholder="Schedule (time and event, separated by semicolon)"
+                />
+              </div>
+
+              <div className="organizers">
+                <label className="block text-sm font-medium text-gray-700">
+                  Organizers
+                </label>
+                {fields.map((item, index) => (
+                  <div key={item.id} className="mb-4">
+                    <input
+                      {...register(`organizers.${index}.name`, {
+                        required: true,
+                      })}
+                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      placeholder="Organizer Name"
+                    />
+                    <input
+                      {...register(`organizers.${index}.website`, {
+                        required: true,
+                      })}
+                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      placeholder="Organizer Website"
+                    />
+                    <input
+                      {...register(`organizers.${index}.contact.email`, {
+                        required: true,
+                      })}
+                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      placeholder="Organizer Email"
+                    />
+                    <input
+                      {...register(`organizers.${index}.contact.phone`, {
+                        required: true,
+                      })}
+                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      placeholder="Organizer Phone"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => remove(index)}
+                      className="mt-2 text-red-500 hover:text-red-700"
+                    >
+                      Remove Organizer
+                    </button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() =>
+                    append({
+                      name: "",
+                      website: "",
+                      contact: { email: "", phone: "" },
+                    })
+                  }
+                  className="mt-2 text-blue-500 hover:text-blue-700"
+                >
+                  Add Organizer
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Add Event
+          </button>
+        </form>
       </div>
     </div>
   );
 };
 
 export default AddEvent;
-

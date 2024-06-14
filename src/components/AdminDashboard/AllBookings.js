@@ -13,7 +13,7 @@ const AllBookings = () => {
   console.log(bookings);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-6 bg-gray-100">
       <h1 className="text-3xl font-bold mb-4">All Bookings</h1>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {bookings?.map((booking) => (

@@ -33,7 +33,6 @@ const Modal = ({ isOpen, onClose, event }) => {
       onClose();
     } catch (error) {
       console.error("Payment error:", error.message);
-      console.error("Payment failed. Please try again.");
       setPaymentLoading(false);
     }
   };
