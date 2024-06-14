@@ -13,7 +13,9 @@ const Bookings = () => {
 
   useEffect(() => {
     if (user) {
-      fetch(`http://localhost:5000/bookings/${user.email}`)
+      fetch(
+        `https://ticket-booking-server-ocgh.onrender.com/bookings/${user.email}`
+      )
         .then((res) => res.json())
         .then((data) => {
           if (Array.isArray(data) && data.length > 0) {

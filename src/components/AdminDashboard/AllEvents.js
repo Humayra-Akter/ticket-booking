@@ -10,7 +10,7 @@ const AllEvents = () => {
   const [editEvent, setEditEvent] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/events")
+    fetch("https://ticket-booking-server-ocgh.onrender.com/events")
       .then((res) => res.json())
       .then((data) => setEvents(data))
       .catch((error) => console.error("Error fetching events:", error));
@@ -33,13 +33,16 @@ const AllEvents = () => {
   };
 
   const handleSaveEvent = (updatedEvent) => {
-    fetch(`http://localhost:5000/events/${updatedEvent._id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedEvent),
-    })
+    fetch(
+      `https://ticket-booking-server-ocgh.onrender.com/events/${updatedEvent._id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedEvent),
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         const updatedEvents = events.map((event) =>
@@ -53,9 +56,12 @@ const AllEvents = () => {
 
   const handleDeleteEvent = (eventId) => {
     if (window.confirm("Are you sure you want to delete this event?")) {
-      fetch(`http://localhost:5000/events/${eventId}`, {
-        method: "DELETE",
-      })
+      fetch(
+        `https://ticket-booking-server-ocgh.onrender.com/events/${eventId}`,
+        {
+          method: "DELETE",
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
           toast.success("Event deleted successfully");

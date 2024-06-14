@@ -4,7 +4,7 @@ const AllBookings = () => {
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/booking")
+    fetch("https://ticket-booking-server-ocgh.onrender.com/booking")
       .then((res) => res.json())
       .then((data) => setBookings(data));
   }, []);

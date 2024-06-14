@@ -31,7 +31,7 @@ const Signup = () => {
         data.password
       );
 
-      fetch("http://localhost:5000/user", {
+      fetch("https://ticket-booking-server-ocgh.onrender.com/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,7 +55,7 @@ const Signup = () => {
     try {
       const { user } = await signInWithPopup(auth, provider);
 
-      fetch("http://localhost:5000/user", {
+      fetch("https://ticket-booking-server-ocgh.onrender.com/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

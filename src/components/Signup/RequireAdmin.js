@@ -12,13 +12,16 @@ const RequireAdmin = ({ children }) => {
     const token = localStorage.getItem("token");
 
     if (adminEmail && token) {
-      fetch(`http://localhost:5000/admin?email=${adminEmail}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      fetch(
+        `https://ticket-booking-server-ocgh.onrender.com/admin?email=${adminEmail}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
           if (data && data.length > 0 && data[0].email === adminEmail) {

@@ -26,7 +26,9 @@ const Login = () => {
         data.password
       );
 
-      fetch(`http://localhost:5000/user?email=${user.email}`)
+      fetch(
+        `https://ticket-booking-server-ocgh.onrender.com/user?email=${user.email}`
+      )
         .then((res) => res.json())
         .then((userData) => {
           if (userData.length > 0) {
@@ -51,7 +53,9 @@ const Login = () => {
     try {
       const { user } = await signInWithPopup(auth, provider);
 
-      fetch(`http://localhost:5000/user?email=${user.email}`)
+      fetch(
+        `https://ticket-booking-server-ocgh.onrender.com/user?email=${user.email}`
+      )
         .then((res) => res.json())
         .then((userData) => {
           if (userData.length > 0) {

@@ -3,12 +3,12 @@ import { useParams, Link } from "react-router-dom";
 import Modal from "./Modal";
 
 const EventDetails = () => {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [event, setEvent] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/events/${id}`)
+    fetch(`https://ticket-booking-server-ocgh.onrender.com/events/${id}`)
       .then((res) => res.json())
       .then((data) => setEvent(data));
   }, [id]);

@@ -14,7 +14,7 @@ const AddAdmin = () => {
       email: email,
       password: password,
     };
-    await fetch("http://localhost:5000/admin", {
+    await fetch("https://ticket-booking-server-ocgh.onrender.com/admin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

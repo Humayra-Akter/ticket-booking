@@ -8,10 +8,11 @@ const AdminLoginModal = ({ onClose, onAdminLogin }) => {
   const navigate = useNavigate();
 
   const onSubmit = async () => {
-    fetch(`http://localhost:5000/admin?email=${email}`)
+    fetch(
+      `https://ticket-booking-server-ocgh.onrender.com/admin?email=${email}`
+    )
       .then((res) => res.json())
       .then((adminData) => {
-  
         const admin = adminData.find((admin) => admin?.email === email);
 
         if (admin) {

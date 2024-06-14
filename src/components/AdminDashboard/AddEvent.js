@@ -10,7 +10,7 @@ const AddEvent = () => {
   const [isFree, setIsFree] = useState(false);
 
   const onSubmit = async (data) => {
-    await fetch("http://localhost:5000/event", {
+    await fetch("https://ticket-booking-server-ocgh.onrender.com/event", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

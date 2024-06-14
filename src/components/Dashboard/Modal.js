@@ -12,16 +12,19 @@ const Modal = ({ isOpen, onClose, event }) => {
     setPaymentLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/payment", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          token,
-          event,
-        }),
-      });
+      const response = await fetch(
+        "https://ticket-booking-server-ocgh.onrender.com/payment",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            token,
+            event,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Payment failed");
@@ -53,7 +56,7 @@ const Modal = ({ isOpen, onClose, event }) => {
         displayName: user?.displayName,
       },
     };
-    await fetch("http://localhost:5000/booking", {
+    await fetch("https://ticket-booking-server-ocgh.onrender.com/booking", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
