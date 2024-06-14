@@ -6,6 +6,8 @@ import BackHome from "../Shared/BackHome";
 import AllBookings from "./AllBookings";
 import AddEvent from "./AddEvent";
 import AddAdmin from "./AddAdmin";
+import AllEvents from "./AllEvents";
+import EditEvent from "./EditEvent";
 
 const AdminDashboard = () => {
   const [selectedMenuItem, setSelectedMenuItem] = useState("event");
@@ -41,6 +43,14 @@ const AdminDashboard = () => {
             </li>{" "}
             <li
               className={`p-4 cursor-pointer ${
+                selectedMenuItem === "events" && "bg-gray-700"
+              }`}
+              onClick={() => handleMenuItemClick("events")}
+            >
+              <Link to="/adminDashboard/events">All Events</Link>
+            </li>{" "}
+            <li
+              className={`p-4 cursor-pointer ${
                 selectedMenuItem === "bookings" && "bg-gray-700"
               }`}
               onClick={() => handleMenuItemClick("bookings")}
@@ -56,6 +66,7 @@ const AdminDashboard = () => {
       <div className="flex-1 p-8">
         {selectedMenuItem === "event" && <AddEvent />}
         {selectedMenuItem === "admin" && <AddAdmin />}
+        {selectedMenuItem === "events" && <AllEvents />}
         {selectedMenuItem === "bookings" && <AllBookings />}
       </div>
     </div>

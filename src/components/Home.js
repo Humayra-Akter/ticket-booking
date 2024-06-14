@@ -20,7 +20,7 @@ const Home = () => {
 
   const adminLogout = () => {
     signOut(auth);
-    localStorage.removeItem("accessToken");
+    localStorage.removeItem("token");
     localStorage.removeItem("adminEmail");
     setIsAdminLoggedIn(false);
   };

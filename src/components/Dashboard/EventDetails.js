@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import Modal from "./Modal"; // Import Modal component
+import Modal from "./Modal";
 
 const EventDetails = () => {
-  const { id } = useParams(); // Extract ID from URL parameters
+  const { id } = useParams(); 
   const [event, setEvent] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
 
@@ -71,7 +71,7 @@ const EventDetails = () => {
               Book Now
             </button>
             <Link
-              to="/"
+              to="/dashboard"
               className="inline-block bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-md text-center"
             >
               Back to Home

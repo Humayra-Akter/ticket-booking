@@ -12,6 +12,9 @@ import AdminDashboard from "./components/AdminDashboard/AdminDashboard";
 import RequireAuth from "./components/Signup/RequireAuth";
 import AddAdmin from "./components/AdminDashboard/AddAdmin";
 import AllBookings from "./components/AdminDashboard/AllBookings";
+import RequireAdmin from "./components/Signup/RequireAdmin";
+import AllEvents from "./components/AdminDashboard/AllEvents";
+import EditEvent from "./components/AdminDashboard/EditEvent";
 
 const App = () => {
   return (
@@ -37,9 +40,11 @@ const App = () => {
           }
         />{" "}
         <Route path="/event/:id" element={<EventDetails />} />
-        <Route path="/adminDashboard" element={<AdminDashboard />} />
-        <Route path="/adminDashboard/admin" element={<AddAdmin />} />
-        <Route path="/adminDashboard/bookings" element={<AllBookings />} />
+        <Route path="/adminDashboard" element={<AdminDashboard />} />{" "}
+        <Route path="/adminDashboard/admin" element={<AddAdmin />} />{" "}
+        <Route path="/adminDashboard/events" element={<AllEvents />} />{" "}
+        <Route path="/adminDashboard/bookings" element={<AllBookings />} />{" "}
+        <Route path="/adminDashboard/editEvent/:id" element={<EditEvent />} />
       </Routes>
 
       <ToastContainer />

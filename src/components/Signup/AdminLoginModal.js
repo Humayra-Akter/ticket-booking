@@ -11,6 +11,7 @@ const AdminLoginModal = ({ onClose, onAdminLogin }) => {
     fetch(`http://localhost:5000/admin?email=${email}`)
       .then((res) => res.json())
       .then((adminData) => {
+  
         const admin = adminData.find((admin) => admin?.email === email);
 
         if (admin) {
