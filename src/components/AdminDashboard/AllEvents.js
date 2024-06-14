@@ -37,7 +37,6 @@ const AllEvents = () => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: JSON.stringify(updatedEvent),
     })
@@ -48,9 +47,7 @@ const AllEvents = () => {
         );
         setEvents(updatedEvents);
         closeEditModal();
-      })
-      .catch((error) => {
-        console.error("Error updating event:", error);
+        toast.success("Event updated successfully");
       });
   };
 
@@ -61,9 +58,11 @@ const AllEvents = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          toast.success("Event deleted");
-        })
-       
+          toast.success("Event deleted successfully");
+
+          const updatedEvents = events.filter((event) => event._id !== eventId);
+          setEvents(updatedEvents);
+        });
     }
   };
 

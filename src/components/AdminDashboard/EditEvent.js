@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState } from "react";
 
 const EditEvent = ({ event, onClose, onSave }) => {
   const [formData, setFormData] = useState({
+    _id: event._id,
     name: event.name,
     description: event.description,
     date: event.date,
@@ -22,13 +22,10 @@ const EditEvent = ({ event, onClose, onSave }) => {
   };
 
   const handleSubmit = (e) => {
-    const token = localStorage.getItem("token");
-
     e.preventDefault();
-    onSave(formData);
+    onSave(formData); // Ensure formData includes _id
     onClose();
   };
-
   return (
     <div className="container mx-auto p-6 fixed inset-0 flex items-center justify-center">
       <div className="bg-gray-300 shadow-md rounded-lg p-4 w-full max-w-md">
